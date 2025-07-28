@@ -4,15 +4,9 @@ using Verse;
 
 namespace PostOffice.Audit.Rules.Messages;
 
-internal class MessageRuleChain : RuleChain<Message>
+internal sealed class MessageRuleChain(List<IRule<Message>> rules) : RuleChain<Message>(rules)
 {
-    public MessageRuleChain()
-    {
-    }
-
-    public MessageRuleChain(List<IRule<Message>> rules) : base(rules)
-    {
-    }
+    public MessageRuleChain() : this([]) { }
 
     protected override string TargetTypeName => nameof(Message);
 

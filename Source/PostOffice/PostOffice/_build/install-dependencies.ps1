@@ -9,6 +9,6 @@ $config = Get-Content -LiteralPath "${PSScriptRoot}/hostconfig.json" -Raw | Conv
 
 # copy dependencies to dependencies folder
 # CombatAI (CAI-5000), optional runtime dependency, required for build
-Copy-Item -LiteralPath "$($config.steam_root)/steamapps/workshop/content/294100/2938891185/1.5/Assemblies/CombatAI.dll" -Destination "${PSScriptRoot}/dependencies/CombatAI.dll"
+Copy-Item -LiteralPath "$($config.steam_root)/steamapps/workshop/content/294100/2938891185/1.6/Assemblies/CombatAI.dll" -Destination "${PSScriptRoot}/dependencies/CombatAI.dll"
 
 Write-Host "Dependencies copied to dependencies folder"

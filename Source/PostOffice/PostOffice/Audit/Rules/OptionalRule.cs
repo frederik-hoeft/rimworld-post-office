@@ -1,6 +1,4 @@
-﻿using Verse;
-
-namespace PostOffice.Audit.Rules;
+﻿namespace PostOffice.Audit.Rules;
 
 internal abstract class OptionalRule<TTarget>(Func<PostOfficeSettings, bool> isEnabled, string? debugName = null) : BaseRule<TTarget>(debugName)
 {

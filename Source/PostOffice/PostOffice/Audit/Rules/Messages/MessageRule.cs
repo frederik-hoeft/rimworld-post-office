@@ -2,7 +2,7 @@
 
 namespace PostOffice.Audit.Rules.Messages;
 
-internal class MessageRule : RuleProvider
+internal sealed class MessageRule : RuleProvider
 {
     private MessageRule() { }
 

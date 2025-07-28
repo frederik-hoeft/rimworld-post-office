@@ -6,19 +6,17 @@ using CombatAI;
 
 namespace PostOffice.Patching.HarmonyPatches;
 
-using static PostOfficeMod;
-
 [HarmonyPatch(typeof(MusicManagerPlay), nameof(MusicManagerPlay.DangerMusicMode), MethodType.Getter)]
 [RequiresMod(ModDependency.CAI5000)]
 public static class MusicManagerPlay_DangerMusicModePatch
 {
-    private static bool _previousResult;
+    private static bool s_previousResult;
 
     public static bool Prefix(MusicManagerPlay __instance, ref bool __result)
     {
         // override base game implementation only iff mod is enabled
         // and dependencies are loaded.
-        if (Settings is { isActive: true, cai5000_delayCombatMusic: true} && ModDependency.IsCai5000Loaded)
+        if (PostOfficeMod.Settings is { isActive: true, cai5000_delayCombatMusic: true} && ModDependency.IsCai5000Loaded)
         {
             // for every map check what the game thinks about the danger rating
             bool resultSet = false;
@@ -53,18 +51,18 @@ public static class MusicManagerPlay_DangerMusicModePatch
                         if (__result)
                         {
                             // prevent spamming the log
-                            if (_previousResult != __result)
+                            if (s_previousResult != __result)
                             {
                                 Logger.LogVerbose($"(CAI-5000 patch) DangerRating is high and RimWorld is attempting to play combat music! Threat is visible, so allowing combat music.");
                             }
-                            _previousResult = __result;
+                            s_previousResult = __result;
                             // if we already found a visible threat, we can stop here
                             return false;
                         }
                         // prevent spamming the log
-                        else if (_previousResult != __result)
+                        else if (s_previousResult != __result)
                         {
-                            _previousResult = __result;
+                            s_previousResult = __result;
                             Logger.LogVerbose($"(CAI-5000 patch) DangerRating is high and RimWorld is attempting to play combat music! Threat is not visible, so blocking combat music.");
                         }
                     }
