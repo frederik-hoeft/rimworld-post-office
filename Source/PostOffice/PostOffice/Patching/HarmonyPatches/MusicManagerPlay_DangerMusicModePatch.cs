@@ -1,4 +1,8 @@
-﻿using HarmonyLib;
+﻿// conditional compilation patch for CAI-5000
+
+#if CAI5000
+
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using Verse;
@@ -88,3 +92,5 @@ public static class MusicManagerPlay_DangerMusicModePatch
         return true;
     }
 }
+
+#endif // CAI5000
