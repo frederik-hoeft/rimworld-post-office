@@ -9,17 +9,23 @@ internal static class PostOfficePatches
     public static void Apply(Harmony harmony)
     {
         Logger.LogAlways($"applying patches...");
-        Type[] harmonyPatches = typeof(PostOfficePatches).Assembly.GetTypes()
-            .Where(t => t.IsClass && t.IsAbstract && t.IsSealed // static class <==> class && sealed && abstract
-                && t.TryGetAttribute<HarmonyPatch>(out _))
-            .ToArray();
+        Type[] harmonyPatches = 
+        [
+            .. typeof(PostOfficePatches).Assembly.GetTypes().Where(static t => t is 
+            {
+                // static class <==> class && sealed && abstract
+                IsClass: true,
+                IsAbstract: true,
+                IsSealed: true
+            } && t.TryGetAttribute<HarmonyPatch>(out _))
+        ];
 
         int patchCount = 0;
         foreach (Type harmonyPatch in harmonyPatches)
         {
-            if (harmonyPatch.TryGetAttribute(out RequiresModAttribute? dependency) && !ModDependency.IsAvailable(dependency!.ModId))
+            if (harmonyPatch.TryGetAttribute(out RequiresModAttribute? dependency) && !ModDependency.IsAvailable(dependency.ModId))
             {
-                Logger.LogAlways($"skipping {harmonyPatch.Name} due to missing dependency: '{dependency!.ModId}'");
+                Logger.LogAlways($"skipping {harmonyPatch.Name} due to missing dependency: '{dependency.ModId}'");
                 continue;
             }
             harmony.CreateClassProcessor(harmonyPatch).Patch();
@@ -29,9 +35,7 @@ internal static class PostOfficePatches
         Logger.LogAlways($"applied {patchCount} patches!");
     }
 
-    // .NET Framework doesn't support null-state static analysis :C
-    // (also: why is RimWorld still using .NET Framework? it's not 2016 anymore :P)
-    private static bool TryGetAttribute<TAttribute>(this Type type, /*[NotNullWhen(true)]*/ out TAttribute? attribute) 
+    private static bool TryGetAttribute<TAttribute>(this Type type, [NotNullWhen(returnValue: true)] out TAttribute? attribute) 
         where TAttribute : Attribute
     {
         attribute = type.GetCustomAttribute<TAttribute>();

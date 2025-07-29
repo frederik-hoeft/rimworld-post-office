@@ -2,7 +2,7 @@
 
 namespace PostOffice.Audit.Rules.Letters;
 
-internal class LetterRule : RuleProvider
+internal sealed class LetterRule : RuleProvider
 {
     private LetterRule() { }
 

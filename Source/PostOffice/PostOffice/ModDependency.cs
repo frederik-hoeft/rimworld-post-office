@@ -8,9 +8,9 @@ internal static class ModDependency
 {
     public const string CAI5000 = "Krkr.rule56";
 
-    private static bool? _isCai5000Loaded;
+    private static bool? s_isCai5000Loaded;
 
-    public static bool IsCai5000Loaded => _isCai5000Loaded ??= IsAvailable(CAI5000);
+    public static bool IsCai5000Loaded => s_isCai5000Loaded ??= IsAvailable(CAI5000);
 
     public static bool IsAvailable(string modId) =>
         LoadedModManager.RunningMods.Any(mod =>

@@ -4,15 +4,9 @@ using Verse;
 
 namespace PostOffice.Audit.Rules.Letters;
 
-internal class LetterRuleChain : RuleChain<Letter>
+internal sealed class LetterRuleChain(List<IRule<Letter>> rules) : RuleChain<Letter>(rules)
 {
-    public LetterRuleChain()
-    {
-    }
-
-    public LetterRuleChain(List<IRule<Letter>> rules) : base(rules)
-    {
-    }
+    public LetterRuleChain() : this([]) { }
 
     protected override string TargetTypeName => nameof(Letter);
 
